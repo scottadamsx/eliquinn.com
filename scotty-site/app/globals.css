@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: theme(colors.paper);
+  color: theme(colors.ink);
+  font-family: var(--font-body), sans-serif;
+  overflow-x: hidden;
+}
+
+/* Lenis recommended styles */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Split-type line masking */
+.line-mask {
+  overflow: hidden;
+  display: block;
+}
+.split-line {
+  display: block;
+}
+
+::selection {
+  background: theme(colors.signal);
+  color: theme(colors.paper);
+}
+
+/* Respect reduced motion: kill transforms/animation */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Animated link underline that sweeps in from the left */
+.link-sweep {
+  position: relative;
+}
+.link-sweep::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.link-sweep:hover::after,
+.link-sweep:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+
+/* Filmic grain over the hero video */
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.07;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  animation: grain 6s steps(8) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-4%, -4%); }
+  30% { transform: translate(3%, -2%); }
+  50% { transform: translate(-2%, 4%); }
+  70% { transform: translate(4%, 2%); }
+  90% { transform: translate(-3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* Vignette to draw the eye centre-frame */
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    125% 125% at 50% 38%,
+    transparent 52%,
+    rgba(17, 17, 16, 0.5) 100%
+  );
+}
+
+/* Hero scroll cue */
+.scroll-cue {
+  animation: cueBob 1.8s ease-in-out infinite;
+}
+@keyframes cueBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(7px); }
+}
+
+/* Horizontal-scroll progress bar */
+.work-progress {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* Ambient CSS fallback for the hero, used if the video file is absent */
+@keyframes drift {
+  0% { transform: translate3d(-2%, -1%, 0) rotate(0deg); }
+  50% { transform: translate3d(2%, 1%, 0) rotate(6deg); }
+  100% { transform: translate3d(-2%, -1%, 0) rotate(0deg); }
+}
+.hero-fallback {
+  background:
+    radial-gradient(40% 55% at 30% 35%, #2a2a28 0%, transparent 60%),
+    radial-gradient(35% 50% at 72% 65%, #cbc8bf 0%, transparent 55%),
+    linear-gradient(160deg, #d8d5cd 0%, #9a978f 100%);
+  animation: drift 22s ease-in-out infinite;
+}
